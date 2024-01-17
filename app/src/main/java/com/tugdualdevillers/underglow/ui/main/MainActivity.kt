@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.buttonConnect).setOnClickListener{
-            startActivity(Intent(this, LightActivity::class.java))
+            //startActivity(Intent(this, LightActivity::class.java))
         }
 
     }
