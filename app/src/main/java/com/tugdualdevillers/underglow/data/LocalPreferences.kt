@@ -15,6 +15,14 @@ class LocalPreferences private constructor(context: Context) {
         return sharedPreferences.getString("selectedDevice", null)
     }
 
+    fun lastConnectedDeviceAddress(deviceAddress: String?) {
+        sharedPreferences.edit().putString("selectedDeviceAddress", deviceAddress).apply()
+    }
+
+    fun lastConnectedDeviceAddress(): String? {
+        return sharedPreferences.getString("selectedDeviceAddress", null)
+    }
+
     companion object {
         private var INSTANCE: LocalPreferences? = null
 

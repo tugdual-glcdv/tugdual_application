@@ -4,8 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import com.tugdualdevillers.underglow.ui.light.LightActivity
+import androidx.core.content.ContextCompat
 import com.tugdualdevillers.underglow.R
+import com.tugdualdevillers.underglow.data.LocalPreferences
 import com.tugdualdevillers.underglow.ui.scan.ScanActivity
 
 class MainActivity : AppCompatActivity() {
@@ -19,8 +20,26 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, ScanActivity::class.java))
         }
 
-        findViewById<Button>(R.id.buttonConnect).setOnClickListener{
-            //startActivity(Intent(this, LightActivity::class.java))
+
+
+        val localPreferences = LocalPreferences.getInstance(this)
+        val buttonReConnect = findViewById<Button>(R.id.buttonConnect)
+
+        val lastAddress = localPreferences.lastConnectedDeviceAddress()
+
+        if(lastAddress!=null){
+
+            buttonReConnect.setTextColor(getColor(R.color.text_on_light_bg))
+            buttonReConnect.backgroundTintList = ContextCompat.getColorStateList(this, R.color.bg_light)
+
+            buttonReConnect.text = getString(R.string._main_activity_button_reconnect_active, localPreferences.lastConnectedDeviceName())
+
+            buttonReConnect.setOnClickListener{
+                startActivity(Intent(this, ScanActivity::class.java))
+                val intent = Intent(this, ScanActivity::class.java)
+                intent.putExtra("lastAddress", lastAddress)
+                startActivity(intent)
+            }
         }
 
     }

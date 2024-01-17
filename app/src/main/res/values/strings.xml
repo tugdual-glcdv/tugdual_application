@@ -9,6 +9,7 @@
     <string name="_main_activity_text_subtitle">Allumons la lumière...</string>
     <string name="_main_activity_button_scan">Chercher un appareil</string>
     <string name="_main_activity_button_reconnect">Se reconnecter au dernier</string>
+    <string name="_main_activity_button_reconnect_active">Se reconnecter à %1$s</string>
 
     <!-- Scan Activity Strings -->
     <string name="_scan_activity_text_title">Appareils à proximité</string>

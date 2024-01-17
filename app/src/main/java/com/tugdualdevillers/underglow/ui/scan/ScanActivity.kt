@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.BluetoothLeScanner
@@ -35,6 +36,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tugdual.yunikon.ui.ble_scan.adapter.AdapteurPeripheriques
 import com.tugdualdevillers.underglow.R
 import com.tugdualdevillers.underglow.data.BluetoothLEManager
+import com.tugdualdevillers.underglow.data.LocalPreferences
 import com.tugdualdevillers.underglow.ui.light.LightActivity
 import com.tugdualdevillers.underglow.ui.scan.rv_peripheriques.DataItemPeripheriques
 
@@ -44,15 +46,31 @@ class ScanActivity : AppCompatActivity() {
         setContentView(R.layout.activity_scan)
 
         findViewById<Button>(R.id.buttonReScan).setOnClickListener{
-            verifyPermissions()
-            scanLeDevice()
+            if(verifyPermissions()){
+                setupBLE()
+            }
         }
 
-        if (!hasPermission()){
-            askForPermission()
+        // Vérifier si l'intent contient la clé "lastAddress"
+        if (intent.hasExtra("lastAddress")) {
+            // Si la clé est présente, récupérez la valeur
+            val receivedAdresse = intent.getStringExtra("lastAddress")
+
+            setupRecycler()
+            setupBLE()
+
+            val lastDevice: BluetoothDevice? = bluetoothAdapter?.getRemoteDevice(receivedAdresse)
+            BluetoothLEManager.setCurrentDevice(lastDevice)
+            connectToCurrentDevice()
+        } else {
+            // Si la clé n'est pas présente, cela signifie qu'il n'y a pas de paramètre
+
+            if (!hasPermission()){
+                askForPermission()
+            }
+            setupRecycler()
+            setupBLE()
         }
-        setupRecycler()
-        setupBLE()
     }
 
     override fun onResume() {
@@ -61,17 +79,21 @@ class ScanActivity : AppCompatActivity() {
         bleDevicesFoundList.clear()
         findViewById<RecyclerView>(R.id.recyclerViewPeripheriques).adapter?.notifyDataSetChanged()
         findViewById<TextView>(R.id.textViewNoDeviceDetected).visibility = View.VISIBLE
-        verifyPermissions()
+
+        if(verifyPermissions()){
+            // Lancer suite => Activation BLE + Lancer Scan
+            setupBLE()
+        }
     }
 
-    private fun verifyPermissions(){
+    private fun verifyPermissions(): Boolean {
         if (!packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             // Test si le téléphone est compatible BLE, si c'est pas le cas, on finish() l'activity
             Toast.makeText(this, getString(R.string._permission_toast_not_compatible_BLE), Toast.LENGTH_SHORT).show()
             finish()
         } else if (hasPermission() && locationServiceEnabled()) {
-            // Lancer suite => Activation BLE + Lancer Scan
-            setupBLE()
+            // tout est ok, on a bien les permissions
+            return true
         } else if(!hasPermission()) {
             // On demande la permission
             askForPermission()
@@ -79,8 +101,9 @@ class ScanActivity : AppCompatActivity() {
             // On demande d'activer la localisation
             // Idéalement on demande avec un activité.
             // À vous de me proposer mieux (Une activité, une dialog, etc)
-            startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
         }
+        return false
     }
 
     // Gestion du Bluetooth
@@ -98,7 +121,7 @@ class ScanActivity : AppCompatActivity() {
 
     // On ne retourne que les « Devices » proposant le bon UUID
     private var scanFilters: List<ScanFilter> = arrayListOf(
-    //  ScanFilter.Builder().setServiceUuid(ParcelUuid(BluetoothLEManager.DEVICE_UUID)).build()
+        //ScanFilter.Builder().setServiceUuid(ParcelUuid(BluetoothLEManager.DEVICE_UUID)).build()
     )
 
     // Variable de fonctionnement
@@ -218,6 +241,7 @@ class ScanActivity : AppCompatActivity() {
     // Le scan va durer 10 secondes seulement, sauf si vous passez une autre valeur comme paramètre.
     @SuppressLint("MissingPermission")
     private fun scanLeDevice(scanPeriod: Long = 10000) {
+
         if (!mScanning) {
             bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
 
@@ -298,6 +322,9 @@ class ScanActivity : AppCompatActivity() {
                             // Nous sommes connecté au device, on active les notifications pour être notifié si la LED change d'état.
                             // On sauvegarde dans les « LocalPréférence » de l'application le nom du dernier préphérique
                             // sur lequel nous nous sommes connecté
+                            val localPreferences = LocalPreferences.getInstance(this)
+                            localPreferences.lastConnectedDeviceName(device.name)
+                            localPreferences.lastConnectedDeviceAddress(device.address)
 
                             val intentC = Intent(this@ScanActivity, LightActivity::class.java)
                             startActivity(intentC)
