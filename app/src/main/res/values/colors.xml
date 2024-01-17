@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Backgrounds Colors -->
+    <color name="bg_dark">#000000</color>
+    <color name="bg_light">#FFFFFF</color>
+    <color name="bg_deactivated">#BCB7B7</color>
+    <color name="bg_purple_button">#7460ED</color>
+    <color name="bg_pink_button">#F603C6</color>
+
+    <!-- Text Colors -->
+    <color name="text_on_light_bg">#000000</color>
+    <color name="text_on_dark_bg">#FFFFFF</color>
+    <color name="text_deactivated">#D5D5D5</color>
+
+</resources>

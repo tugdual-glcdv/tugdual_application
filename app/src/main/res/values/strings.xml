@@ -1,0 +1,38 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="TypographyEllipsis">
+    <string name="app_name">Underglow</string>
+
+    <!-- Utility Strings -->
+    <string name="placeholder">Placeholder</string>
+
+    <!-- Main Activity Strings -->
+    <string name="_main_activity_text_title">Bienvenue !</string>
+    <string name="_main_activity_text_subtitle">Allumons la lumière...</string>
+    <string name="_main_activity_button_scan">Chercher un appareil</string>
+    <string name="_main_activity_button_reconnect">Se reconnecter au dernier</string>
+
+    <!-- Scan Activity Strings -->
+    <string name="_scan_activity_text_title">Appareils à proximité</string>
+    <string name="_scan_activity_text_no_devices">Aucun appareil détecté pour l\'instant...</string>
+    <string name="_scan_activity_button_scan_again">Relancer un scan de 10s</string>
+    <string name="_scan_activity_button_connect">Connecter</string>
+    <string name="_scan_activity_toast_connecting">Connexion en cours à %1$s</string>
+    <string name="_scan_activity_toast_scan_ended">fin du scan</string>
+
+    <!-- Light Activity Strings -->
+    <string name="_light_activity_text_nb_switch">Nombre de switch : %1$d</string>
+    <string name="_light_activity_text_connected_to">Connecté à %1$s</string>
+    <string name="_light_activity_button_on_off">On / Off</string>
+    <string name="_light_activity_button_flash_1s">Clignoter 1s</string>
+    <string name="_light_activity_button_disconnect">Se déconnecter</string>
+    <string name="_light_activity_toast_disconnected">Déconecté !</string>
+    <string name="_light_activity_toast_uuid_not_found">uuid not found</string>
+    <string name="_light_activity_toast_not_connected">not connected</string>
+
+    <!-- BLE Permission Purpose Strings -->
+    <string name="_permission_toast_not_compatible_BLE">L\'appareil n\'est pas compatible BLE</string>
+    <string name="_permission_required_dialog_title">Permission requise</string>
+    <string name="_permission_required_dialog_message">Vous avez refusé la permission nécessaire pour le scan bluetooth. Veuillez l\'activer dans les paramètres pour utiliser cette application.</string>
+    <string name="_permission_required_dialog_negative">Annuler</string>
+    <string name="_permission_required_dialog_positive">OK</string>
+
+</resources>
