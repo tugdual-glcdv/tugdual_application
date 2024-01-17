@@ -21,6 +21,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.ParcelUuid
 import android.provider.Settings
 import android.view.View
 import android.widget.Button
@@ -121,7 +122,7 @@ class ScanActivity : AppCompatActivity() {
 
     // On ne retourne que les « Devices » proposant le bon UUID
     private var scanFilters: List<ScanFilter> = arrayListOf(
-        //ScanFilter.Builder().setServiceUuid(ParcelUuid(BluetoothLEManager.DEVICE_UUID)).build()
+        ScanFilter.Builder().setServiceUuid(ParcelUuid(BluetoothLEManager.DEVICE_UUID)).build()
     )
 
     // Variable de fonctionnement
